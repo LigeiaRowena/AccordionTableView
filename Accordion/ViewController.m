@@ -30,10 +30,19 @@
 {
 	[super viewDidAppear:animated];
 	
-	//self.accordionView.animation = AccordionAnimationNone;
-	//self.accordionView.handleOpenSection = NO;
-	//[self.accordionView selectSection:1 animation:AccordionAnimationRight];
-	//self.accordionView.headerHeight = 30;
+	// set the kind of animation
+	self.accordionView.animation = AccordionAnimationFade;
+	
+	// a tap gesture on an open section doesn't perform a close animation
+	self.accordionView.handleOpenSection = NO;
+	
+	// at first select a section
+	[self.accordionView selectSection:1];
+	
+	// height of the header/section
+	self.accordionView.headerHeight = 60;
+	
+	// load the accordion
 	[self.accordionView load];
 }
 

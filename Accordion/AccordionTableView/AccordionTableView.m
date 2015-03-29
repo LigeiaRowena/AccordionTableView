@@ -264,7 +264,7 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 {
 	return [self.headers count];
 }
-//fdzdf
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	// the content bean of the data
@@ -375,6 +375,11 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 
 - (void)reloadData
 {
+	[self.data enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		AccordionContentBean *bean = (AccordionContentBean*)obj;
+		bean.open = NO;
+	}];
+	
 	[self.table reloadData];
 }
 
@@ -383,9 +388,8 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 	[self.table reloadSections:sections withRowAnimation:animation];
 }
 
-- (void)selectSection:(NSInteger)section animation:(AccordionAnimation)animation
+- (void)selectSection:(NSInteger)section
 {
-	self.animation = animation;
 	[self didSelectSection:section];	
 }
 
