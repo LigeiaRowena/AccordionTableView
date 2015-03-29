@@ -42,7 +42,7 @@
 
 #pragma mark - AccordionHeaderView
 
-typedef void (^AccordionHeaderBlock)(int);
+typedef void (^AccordionHeaderBlock)(NSInteger);
 
 @interface AccordionHeaderView()
 
@@ -116,7 +116,7 @@ typedef void (^AccordionHeaderBlock)(int);
 
 #pragma mark - AccordionViewCell
 
-typedef void (^AccordionViewCellBlock)(NSString*, int, id);
+typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 
 @interface AccordionViewCell()
 
@@ -125,6 +125,9 @@ typedef void (^AccordionViewCellBlock)(NSString*, int, id);
 
 // the main label of the cell
 @property (nonatomic, weak) IBOutlet UILabel *label;
+
+// the index row of the cell
+@property (nonatomic) NSInteger row;
 
 @end
 
@@ -184,7 +187,7 @@ typedef void (^AccordionViewCellBlock)(NSString*, int, id);
 - (IBAction)someAction:(id)sender
 {
 	if (self.accordionViewCellBlock != nil)
-		self.accordionViewCellBlock(@"action_name", 1, @[@"1"]);
+		self.accordionViewCellBlock(@"action_name", self.row, @[@"1"]);
 }
 
 @end
@@ -253,7 +256,7 @@ typedef void (^AccordionViewCellBlock)(NSString*, int, id);
 		{
 			NSArray *content = [self.delegate accordionView:self dataForHeaderInSection:idx];
 			if (content == nil)
-				NSAssert(content != nil, @"Warning: You didn't passed any array for section %i", idx);
+				NSAssert(content != nil, @"Warning: You didn't passed any array for section %lu", (unsigned long)idx);
 
 			AccordionContentBean *bean = [[AccordionContentBean alloc] initWithContent:content];
 			[self.data addObject:bean];
@@ -269,7 +272,7 @@ typedef void (^AccordionViewCellBlock)(NSString*, int, id);
 {
 	return [self.headers count];
 }
-
+//fdzdf
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	// the content bean of the data
@@ -290,7 +293,7 @@ typedef void (^AccordionViewCellBlock)(NSString*, int, id);
 	headerView.section = section;
 	id content = self.headers[section];
 	if ([content isKindOfClass:[NSString class]])
-		[headerView setContent:content block:^(int section) {
+		[headerView setContent:content block:^(NSInteger section) {
 			[self didSelectSection:section];
 		}];
 	
@@ -313,9 +316,10 @@ typedef void (^AccordionViewCellBlock)(NSString*, int, id);
 	if (bean.open)
 	{
 		id content = bean.content[indexPath.row];
+		cell.row = indexPath.row;
 		if ([content isKindOfClass:[NSString class]])
-			[cell setContent:content block:^(NSString * actionName, int index, id object) {
-				NSLog(@"Perform some action %@ with index %i and object %@", actionName, index, object);
+			[cell setContent:content block:^(NSString * actionName, NSInteger index, id object) {
+				NSLog(@"Perform some action %@ with index %li and object %@", actionName, (long)index, object);
 			}];
 	}
 	
