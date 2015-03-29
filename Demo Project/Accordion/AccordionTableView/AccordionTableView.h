@@ -65,10 +65,11 @@ typedef NS_ENUM(NSInteger, AccordionAnimation) {
 @optional
 
 // returns the header being tapped for each section
-- (UIView *)accordionView:(AccordionTableView *)accordionView viewForHeaderInSection:(NSInteger)section;
+- (AccordionHeaderView *)accordionView:(AccordionTableView *)accordionView viewForHeaderInSection:(NSInteger)section;
 
 // returns the cell of a section
-- (AccordionViewCell *)accordionView:(AccordionTableView *)accordionView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+// the parameter isOpenCell tells if the cell is opened or not
+- (AccordionViewCell *)accordionView:(AccordionTableView *)accordionView cellForRowAtIndexPath:(NSIndexPath *)indexPath isOpenCell:(BOOL)isOpenCell;
 
 // tells the delegate that the specified row is now selected
 - (void)accordionView:(AccordionTableView *)accordionView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;

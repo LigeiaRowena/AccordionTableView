@@ -106,6 +106,11 @@ typedef void (^AccordionHeaderBlock)(NSInteger);
 	[self.button setTitle:(NSString*)obj forState:UIControlStateNormal];
 }
 
+- (void)setBlock:(AccordionHeaderBlock)block
+{
+	self.accordionHeaderBlock = [block copy];
+}
+
 - (IBAction)selectSection:(id)sender
 {
 	if (self.accordionHeaderBlock != nil)
@@ -177,6 +182,11 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 {
 	self.accordionViewCellBlock = [block copy];
 	[self.label setText:(NSString*)obj];
+}
+
+- (void)setBlock:(AccordionViewCellBlock)block
+{
+	self.accordionViewCellBlock = [block copy];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -277,17 +287,27 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	// overrided
-	if (self.delegate && [self.delegate respondsToSelector:@selector(accordionView:viewForHeaderInSection:)])
-		return [self.delegate accordionView:self viewForHeaderInSection:section];
+	AccordionHeaderView *headerView = nil;
 	
-	AccordionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:[AccordionHeaderView reuseIdentifier]];
-	headerView.section = section;
-	id content = self.headers[section];
-	if ([content isKindOfClass:[NSString class]])
-		[headerView setContent:content block:^(NSInteger section) {
+	// overrided in the view controller
+	if (self.delegate && [self.delegate respondsToSelector:@selector(accordionView:viewForHeaderInSection:)])
+	{
+		headerView = [self.delegate accordionView:self viewForHeaderInSection:section];
+		headerView.section = section;
+		[headerView setBlock:^(NSInteger section) {
 			[self didSelectSection:section];
 		}];
+	}
+	else
+	{
+		headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:[AccordionHeaderView reuseIdentifier]];
+		headerView.section = section;
+		id content = self.headers[section];
+		if ([content isKindOfClass:[NSString class]])
+			[headerView setContent:content block:^(NSInteger section) {
+				[self didSelectSection:section];
+			}];
+	}
 	
 	return headerView;
 }
@@ -299,20 +319,30 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	// overrided
-	if (self.delegate && [self.delegate respondsToSelector:@selector(accordionView:cellForRowAtIndexPath:)])
-		return [self.delegate accordionView:self cellForRowAtIndexPath:indexPath];
-	
-	AccordionViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[AccordionViewCell reuseIdentifier]];
+	AccordionViewCell *cell = nil;
 	AccordionContentBean *bean = self.data[indexPath.section];
-	if (bean.open)
+
+	// overrided in the view controller
+	if (self.delegate && [self.delegate respondsToSelector:@selector(accordionView:cellForRowAtIndexPath:isOpenCell:)])
 	{
-		id content = bean.content[indexPath.row];
+		cell = [self.delegate accordionView:self cellForRowAtIndexPath:indexPath isOpenCell:bean.open];
 		cell.row = indexPath.row;
-		if ([content isKindOfClass:[NSString class]])
-			[cell setContent:content block:^(NSString * actionName, NSInteger index, id object) {
-				NSLog(@"Perform some action %@ with index %li and object %@", actionName, (long)index, object);
-			}];
+		[cell setBlock:^(NSString * actionName, NSInteger index, id object) {
+			NSLog(@"Perform some action %@ with index %li and object %@", actionName, (long)index, object);
+		}];
+	}
+	else
+	{
+		cell = [tableView dequeueReusableCellWithIdentifier:[AccordionViewCell reuseIdentifier]];
+		cell.row = indexPath.row;
+		if (bean.open)
+		{
+			id content = bean.content[indexPath.row];
+			if ([content isKindOfClass:[NSString class]])
+				[cell setContent:content block:^(NSString * actionName, NSInteger index, id object) {
+					NSLog(@"Perform some action %@ with index %li and object %@", actionName, (long)index, object);
+				}];
+		}
 	}
 	
 	return cell;

@@ -36,7 +36,7 @@
 	// a tap gesture on an open section doesn't perform a close animation
 	self.accordionView.handleOpenSection = NO;
 	
-	// at first select a section
+	// at first select a particular section
 	[self.accordionView selectSection:1];
 	
 	// height of the header/section
