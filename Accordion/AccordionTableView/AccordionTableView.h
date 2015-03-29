@@ -106,4 +106,16 @@ typedef NS_ENUM(NSInteger, AccordionAnimation) {
 // selects a section in the accordion
 - (void)selectSection:(NSInteger)section animation:(AccordionAnimation)animation;
 
+// registers a nib object containing a header with the accordion table view
+- (void)registerNibForHeaderView:(UINib *)nib;
+
+// registers a class for use in creating new accordion table header
+- (void)registerClassForHeaderView:(Class)aClass;
+
+// registers a nib object containing a cell with the accordion table view
+- (void)registerNibForCell:(UINib *)nib;
+
+// registers a class for use in creating new accordion table cells
+- (void)registerClassForCell:(Class)aClass;
+
 @end

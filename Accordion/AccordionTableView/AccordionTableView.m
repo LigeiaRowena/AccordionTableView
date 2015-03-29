@@ -229,14 +229,6 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 
 - (void)commonInit
 {
-	// register header NIB
-	UINib *headerNib = [UINib nibWithNibName:@"AccordionHeaderView" bundle:nil];
-	[self.table registerNib:headerNib forHeaderFooterViewReuseIdentifier:[AccordionHeaderView reuseIdentifier]];
-	
-	// register cell NIB
-	UINib *cellNib = [UINib nibWithNibName:@"AccordionViewCell" bundle:nil];
-	[self.table registerNib:cellNib forCellReuseIdentifier:[AccordionViewCell reuseIdentifier]];
-	
 	// init properties
 	self.animation = AccordionAnimationNone;
 	self.handleOpenSection = NO;
@@ -395,6 +387,27 @@ typedef void (^AccordionViewCellBlock)(NSString*, NSInteger, id);
 {
 	self.animation = animation;
 	[self didSelectSection:section];	
+}
+
+- (void)registerNibForHeaderView:(UINib *)nib
+{
+	[self.table registerNib:nib forHeaderFooterViewReuseIdentifier:[AccordionHeaderView reuseIdentifier]];
+	
+}
+
+- (void)registerClassForHeaderView:(Class)aClass
+{
+	[self.table registerClass:aClass forHeaderFooterViewReuseIdentifier:[AccordionHeaderView reuseIdentifier]];
+}
+
+- (void)registerNibForCell:(UINib *)nib
+{
+	[self.table registerNib:nib forCellReuseIdentifier:[AccordionViewCell reuseIdentifier]];
+}
+
+- (void)registerClassForCell:(Class)aClass
+{
+	[self.table registerClass:aClass forCellReuseIdentifier:[AccordionViewCell reuseIdentifier]];
 }
 
 @end

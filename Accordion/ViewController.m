@@ -16,6 +16,14 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	// register header NIB for the accordion
+	UINib *headerNib = [UINib nibWithNibName:@"AccordionHeaderView" bundle:nil];
+	[self.accordionView registerNibForHeaderView:headerNib];
+	
+	// register cell NIB
+	UINib *cellNib = [UINib nibWithNibName:@"AccordionViewCell" bundle:nil];
+	[self.accordionView registerNibForCell:cellNib];
 }
 
 - (void)viewDidAppear:(BOOL)animated
