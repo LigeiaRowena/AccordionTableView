@@ -113,3 +113,9 @@ Please remember that if you want to make a custom class for the cell, you have t
 Tells the delegate that the specified row is now selected
 
 `- (void)accordionView:(AccordionTableView *)accordionView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;`
+
+
+Screens:
+
+![alt text](https://s3.amazonaws.com/cocoacontrols_production/uploads/control_image/image/6381/iOS_Simulator_Screen_Shot_09.mag.2015_19.26.22.png "Screen")
+
